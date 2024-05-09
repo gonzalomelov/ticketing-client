@@ -1,14 +1,17 @@
 import axios from 'axios';
 import { useState } from 'react';
 
-const useRequest = ({ url, method, initialData }) => {
-  const [data, setData] = useState(initialData);
+const useRequest = ({ url, method, data, onSuccess }) => { 
   const [errors, setErrors] = useState([]);
 
   const doRequest = async () => {
     try {
+      setErrors([]);
       const response = await axios.request({ method, url, data });
       console.log(response.data);
+      if (onSuccess) {
+        onSuccess(response.data);
+      }
       return response.data;
     } catch (error) {
       // let receivedErrors = [{ message: error.message }];
@@ -22,11 +25,7 @@ const useRequest = ({ url, method, initialData }) => {
     }
   }
 
-  const updateData = (updatedData) => {
-    setData({ ...data, ...updatedData })
-  }
-
-  return { updateData, doRequest, errors };
+  return { doRequest, errors };
 }
 
 export default useRequest;

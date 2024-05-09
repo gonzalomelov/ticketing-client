@@ -1,20 +1,28 @@
+import { useState } from 'react';
+import Router from 'next/router';
+
 import ErrorDisplay from '../../components/ErrorDisplay';
 import useRequest from '../../hooks/useRequest';
 
 const Signup = () => {
-  const { updateData, doRequest, errors } = useRequest({
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const { doRequest, errors } = useRequest({
     url: '/api/users/signup',
     method: 'post',
-    initialData: {
-      email: '',
-      password: ''
+    data: {
+      email,
+      password
     },
+    onSuccess: (data) => {
+      console.log(data);
+      Router.push('/');
+    }
   });
 
-  const onSubmit = async event => {
+  const onSubmit = event => {
     event.preventDefault();
-    const data = await doRequest();
-    console.log(data);
+    doRequest();
   }
   
   return (
@@ -22,11 +30,11 @@ const Signup = () => {
       <h1>Sign Up</h1>
       <div className="form-group">
         <label>Email Address</label>
-        <input onChange={e => updateData({ email: e.target.value })} className="form-control" />
+        <input onChange={e => setEmail(e.target.value)} className="form-control" />
       </div>
       <div className="form-group">
         <label>Password</label>
-        <input type="password" onChange={e => updateData({ password: e.target.value })} className="form-control" />
+        <input type="password" onChange={e => setPassword(e.target.value)} className="form-control" />
       </div>
       <ErrorDisplay errors={errors} />
       <button className="btn btn-primary">Sign Up</button>
