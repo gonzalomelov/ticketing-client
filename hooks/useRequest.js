@@ -8,7 +8,6 @@ const useRequest = ({ url, method, data, onSuccess }) => {
     try {
       setErrors([]);
       const response = await axios.request({ method, url, data });
-      console.log(response.data);
       if (onSuccess) {
         onSuccess(response.data);
       }
@@ -20,8 +19,6 @@ const useRequest = ({ url, method, data, onSuccess }) => {
       // }
       // setErrors(receivedErrors);
       setErrors(error.response.data.errors);
-
-      console.log(error.response.data.errors);
     }
   }
 
